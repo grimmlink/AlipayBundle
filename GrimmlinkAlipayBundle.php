@@ -1,9 +1,9 @@
 <?php
 
-namespace Grimmlinklink\AlipayBundle;
+namespace Grimmlink\AlipayBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class GrimmlinklinkAlipayBundle extends Bundle
+class GrimmlinkAlipayBundle extends Bundle
 {
 }
