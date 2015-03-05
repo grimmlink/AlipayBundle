@@ -1,0 +1,12 @@
+parameters:
+    grimmlink_alipay.request_handler.class:              'Grimmlink\AlipayBundle\Alipay\Request'
+    grimmlink_alipay.response_handler.class:             'Grimmlink\AlipayBundle\Alipay\Response'
+
+services:
+    grimmlink_alipay.request_handler:
+        class:     '%grimmlink_alipay.request_handler.class%'
+        arguments: ['@form.factory', '%grimmlink_alipay.parameters%']
+
+    grimmlink_alipay.response_handler:
+        class:     '%grimmlink_alipay.response_handler.class%'
+        arguments: ['@request_stack', '@event_dispatcher', '%grimmlink_alipay.parameters%', '%grimmlink_alipay.globals%']
