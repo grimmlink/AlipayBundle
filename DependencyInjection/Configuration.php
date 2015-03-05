@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('grimm_alipay');
+        $rootNode = $treeBuilder->root('grimmlink_alipay');
 
         $rootNode
             ->addDefaultsIfNotSet()
@@ -28,8 +28,8 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('partner')->isRequired()->end()
                         ->scalarNode('key')->isRequired()->end()
-                        ->scalarNode('sign_type')->defaultValue('md5')->end()
-                        ->scalarNode('input_charset')->defaultValue('utf-8')->end()
+                        ->scalarNode('sign_type')->defaultValue('MD5')->end()
+                        ->scalarNode('input_charset')->defaultValue('UTF-8')->end()
                         ->scalarNode('transport')->defaultValue('http')->end()
                         
                         ->scalarNode('service')->defaultValue('create_direct_pay_by_user')->end()

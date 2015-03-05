@@ -25,6 +25,6 @@ class GrimmlinkAlipayExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('grimm_alipay.parameters', $config['parameters']);
+        $container->setParameter('grimmlink_alipay.parameters', $config['parameters']);
     }
 }
