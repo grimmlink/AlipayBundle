@@ -154,10 +154,9 @@ class Request
      */
     public function buildParameters($parameters)
     {
-        $filtered_parameters = Core::filterParameters($parameters);
-        $sorted_params = Core::sortParameters($filtered_parameters);
+        $sorted_params = Core::sortParameters($parameters);
         
-        $sorted_params['sign'] = $this->buildSign($sorted_params, $this->parameters['sign_type'], $this->parameters['key']);
+        $sorted_params['sign'] = $this->buildSign($sorted_params, $this->parameters['key']);
         $sorted_params['sign_type'] = $this->parameters['sign_type'];
         
         return $sorted_params;
@@ -167,23 +166,14 @@ class Request
      * Build sign string
      *
      * @param array  $parameters
-     * @param string $sign_type
      * @param string $key
      *
      * @return string
      */
-    public function buildSign($parameters, $sign_type, $key)
+    public function buildSign($parameters, $key)
     {
         $query_string = Core::toQueryString($parameters);
-        
-        $sign = "";
-        switch ($sign_type) {
-            case "MD5":
-                $sign = md5($query_string . $key);
-                break;
-            default:
-                $sign = "";
-        }
+        $sign = md5($query_string . $key);
         
         return $sign;
     }

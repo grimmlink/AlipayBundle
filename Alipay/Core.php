@@ -45,6 +45,7 @@ class Core
      */
     static public function sortParameters($parameters)
     {
+        $parameters = self::filterParameters($parameters);
         ksort($parameters);
         reset($parameters);
         

@@ -30,11 +30,6 @@ class Response
     private $dispatcher;
 
     /**
-     * @var array
-     */
-    private $data;
-
-    /**
      * @var string
      */
     private $signature;
@@ -70,22 +65,29 @@ class Response
     
     /**
      * Verifies the validity of the signature.
+     * Possible Trade Status:
+     *  WAIT_BUYER_PAY - wait for buyer to pay
+     *  TRADE_CLOSED - transaction timed out
+     *  TRADE_SUCCESS - payment was successful, refunds allowed
+     *  TRADE_PENDING - waiting for buyer to pay
+     *  TRADE_FINISHED - payment was successful, no refunds allowed
      *
      * @return bool
      */
     public function verify()
     {
-        $isSigned = $this->verifySign($this->request->request->all());
+        $query_parameters = $this->request->request->all();
+        $isSigned = $this->verifySign($query_parameters);
         
         $response = 'true';
         if ($this->request->request->has('notify_id')) {
             $response = $this->getNotifyResponse($this->request->request->get('notify_id'));
         }
         
-        $event = new AlipayResponseEvent($this->data, $isSigned);
+        $event = new AlipayResponseEvent($query_parameters, $response, $isSigned);
         $this->dispatcher->dispatch(AlipayEvents::ALIPAY_NOTIFY_RESPONSE, $event);
         
-        if ($response === 'true' && $isSigned) {
+        if (preg_match("/true$/i", $response) && $isSigned) {
             return true;
         } else {
             return false;
@@ -101,19 +103,10 @@ class Response
      */
     private function verifySign($query_parameters)
     {
-        $filtered_parameters = Core::filterParameters($query_parameters);
-        $sorted_params = Core::sortParameters($filtered_parameters);
+        $sorted_params = Core::sortParameters($query_parameters);
         
-        $sign = $this->buildSign($sorted_params, $query_parameters['sign_type'], $this->parameters['key']);
-        
-        $isSigned = false;
-        switch ($this->parameters['sign_type']) {
-            case "MD5" :
-                $isSigned = ($sign == $query_parameters['sign']);
-                break;
-            default :
-                break;
-        }
+        $sign = $this->buildSign($sorted_params, $this->parameters['key']);
+        $isSigned = ($sign == $query_parameters['sign']);
         
         return $isSigned;
     }
@@ -122,23 +115,14 @@ class Response
      * Build sign string
      *
      * @param array  $parameters
-     * @param string $sign_type
      * @param string $key
      *
      * @return string
      */
-    private function buildSign($parameters, $sign_type, $key)
+    private function buildSign($parameters, $key)
     {
         $query_string = self::toQueryString($parameters);
-        
-        $sign = "";
-        switch ($sign_type) {
-            case "MD5" :
-                $sign = md5($query_string . $key);
-                break;
-            default :
-                $sign = "";
-        }
+        $sign = md5($query_string . $key);
         
         return $sign;
     }

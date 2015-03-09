@@ -17,6 +17,11 @@ class AlipayResponseEvent extends Event
     private $data;
 
     /**
+     * @var mixed
+     */
+    private $response;
+
+    /**
      * @var boolean
      */
     private $signed;
@@ -27,9 +32,10 @@ class AlipayResponseEvent extends Event
      * @param array   $data
      * @param boolean $signed
      */
-    public function __construct(array $data, $signed = false)
+    public function __construct(array $data, $response, $signed = false)
     {
         $this->data = $data;
+        $this->response = $response;
         $this->signed = (bool) $signed;
     }
 
@@ -41,6 +47,16 @@ class AlipayResponseEvent extends Event
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Returns the response.
+     *
+     * @return mixed
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 
     /**
