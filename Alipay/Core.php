@@ -68,6 +68,8 @@ class Core
         }
         
         $query_string = implode('&', $query_array);
+        
+        return $query_string;
     }
     
     /**
@@ -86,6 +88,8 @@ class Core
         }
         
         $query_string = implode('&', $query_array);
+        
+        return $query_string;
     }
     
     /**
