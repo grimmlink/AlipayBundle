@@ -28,14 +28,21 @@ class Request
     protected $parameters;
     
     /**
+     * @var array
+     */
+    protected $config;
+    
+    /**
      * Construct method
      *
      * @param FormFactoryInterface $factory
      * @param array                $parameters
+     * @param array                $config
      */
-    public function __construct(FormFactoryInterface $factory, array $parameters)
+    public function __construct(FormFactoryInterface $factory, array $parameters, array $config)
     {
         $this->factory = $factory;
+        $this->config = $config;
 
         $this->init($parameters);
     }
@@ -48,26 +55,18 @@ class Request
     protected function init(array $parameters)
     {
         $this->parameters = array(
-            'partner'           => $parameters['partner'],
             '_input_charset'    => $parameters['input_charset'],
-            
-            'key'               => $parameters['key'],
-            'sign_type'         => strtoupper(trim($parameters['sign_type'])),
-            'transport'         => $parameters['transport'],
-            
             'service'           => $parameters['service'],
-            'payment_type'      => $parameters['payment_type'],
-            'seller_email'      => $parameters['seller_email'],
-            'anti_phishing_key' => $parameters['anti_phishing_key'],
-            'exter_invoke_ip'   => $parameters['exter_invoke_ip'],
+            'partner'           => $parameters['partner'],
+            'currency'          => $parameters['currency'],
+            'sign_type'         => 'MD5',
             
             // 'notify_url'        => $notify_url,
             // 'return_url'        => $return_url,
-            // 'out_trade_no'      => $out_trade_no,
-            // 'total_fee'         => $total_fee,
             // 'subject'           => $subject,
             // 'body'              => $body,
-            // 'show_url'          => $show_url,
+            // 'out_trade_no'      => $out_trade_no,
+            // 'total_fee'         => $total_fee,
         );
     }
 
@@ -156,7 +155,7 @@ class Request
     {
         $sorted_params = Core::sortParameters($parameters);
         
-        $sorted_params['sign'] = $this->buildSign($sorted_params, $this->parameters['key']);
+        $sorted_params['sign'] = $this->buildSign($sorted_params, $this->config['key']);
         $sorted_params['sign_type'] = $this->parameters['sign_type'];
         
         return $sorted_params;
@@ -183,6 +182,6 @@ class Request
      */
     public function getUrl()
     {
-        return 'https://mapi.alipay.com/gateway.do';
+        return $this->config['https_verify_url'];
     }
 }

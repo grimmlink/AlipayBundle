@@ -24,18 +24,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $formFactory = $this->getMock('Symfony\Component\Form\FormFactoryInterface');
 
         $this->_alipay = new Request($formFactory, array(
-            'partner'           => '2088201564874474',
-            'input_charset'    => 'UTF-8',
-            
-            'key'               => '1236464654987984654651321321',
-            'sign_type'         => 'MD5',
+            'partner'           => '2088101122136241',
+            'input_charset'     => 'UTF-8',
+            'currency'          => 'USD',
+            'service'           => 'create_forex_trade',
+        ), array(
+            'http_verify_url'   => 'http://notify.alipay.com/trade/notify_query.do',
+            'https_verify_url'  => 'https://mapi.alipay.com/gateway.do',
             'transport'         => 'http',
-            
-            'service'           => 'create_direct_pay_by_user',
-            'payment_type'      => 1,
-            'seller_email'      => 'grimmlink@gmail.com',
-            'anti_phishing_key' => '',
-            'exter_invoke_ip'   => '',
+            'key'               => '760bdzec6y9goq7ctyx96ezkz78287de',
         ));
         
         $this->_alipay->setParameter('notify_url',    'http://www.domain.com/notify');
@@ -53,14 +50,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testInitParameters()
     {
-        $this->assertEquals(2088201564874474, $this->_alipay->getParameter('partner'));
+        $this->assertEquals(2088101122136241, $this->_alipay->getParameter('partner'));
         $this->assertEquals('UTF-8', $this->_alipay->getParameter('_input_charset'));
-        
-        $this->assertEquals('create_direct_pay_by_user', $this->_alipay->getParameter('service'));
-        $this->assertEquals(1, $this->_alipay->getParameter('payment_type'));
-        $this->assertEquals('grimmlink@gmail.com', $this->_alipay->getParameter('seller_email'));
-        $this->assertEquals('', $this->_alipay->getParameter('anti_phishing_key'));
-        $this->assertEquals('', $this->_alipay->getParameter('exter_invoke_ip'));
+        $this->assertEquals('USD', $this->_alipay->getParameter('currency'));
+        $this->assertEquals('create_forex_trade', $this->_alipay->getParameter('service'));
         
         $this->assertEquals('http://www.domain.com/notify', $this->_alipay->getParameter('notify_url'));
         $this->assertEquals('http://www.domain.com/return', $this->_alipay->getParameter('return_url'));
@@ -103,15 +96,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $parameters = $this->_alipay->getParameters();
         unset($parameters['sign']);
         unset($parameters['sign_type']);
-        unset($parameters['key']);
-        unset($parameters['transport']);
-        unset($parameters['anti_phishing_key']);
-        unset($parameters['exter_invoke_ip']);
         ksort($parameters);
         reset($parameters);
         
         $qs = Core::toQueryString($parameters);
-        $sign = md5($qs . '1236464654987984654651321321');
+        $sign = md5($qs . '760bdzec6y9goq7ctyx96ezkz78287de');
         
         $this->assertTrue($sign === $params['sign']);
     }

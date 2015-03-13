@@ -38,16 +38,11 @@ class Response
      * @var array
      */
     private $parameters;
-    
+
     /**
-     * @var string
+     * @var array
      */
-    private $https_verify_url = 'https://mapi.alipay.com/gateway.do';
-    
-    /**
-     * @var string
-     */
-    private $http_verify_url = 'http://notify.alipay.com/trade/notify_query.do';
+    private $config;
     
     /**
      * Contructor.
@@ -55,12 +50,14 @@ class Response
      * @param RequestStack             $request_stack
      * @param EventDispatcherInterface $dispatcher
      * @param array                    $parameters
+     * @param array                    $config
      */
-    public function __construct(RequestStack $request_stack, EventDispatcherInterface $dispatcher, array $parameters)
+    public function __construct(RequestStack $request_stack, EventDispatcherInterface $dispatcher, array $parameters, array $config)
     {
-        $this->request    = $request_stack->getCurrentRequest();
+        $this->request = $request_stack->getCurrentRequest();
         $this->dispatcher = $dispatcher;
         $this->parameters = $parameters;
+        $this->config = $config;
     }
     
     /**
@@ -105,7 +102,7 @@ class Response
     {
         $sorted_params = Core::sortParameters($query_parameters);
         
-        $sign = $this->buildSign($sorted_params, $this->parameters['key']);
+        $sign = $this->buildSign($sorted_params, $this->config['key']);
         $isSigned = ($sign == $query_parameters['sign']);
         
         return $isSigned;
@@ -133,11 +130,11 @@ class Response
             'notify_id'    => $notify_id
         );
         
-        if ($this->parameters['transport'] == 'https') {
-            $verify_url = $this->https_verify_url;
+        if ($this->config['transport'] == 'https') {
+            $verify_url = $this->config['https_verify_url'];
             $notify_parameters['service'] = 'notify_verify';
         } else {
-            $verify_url = $this->http_verify_url;
+            $verify_url = $this->config['http_verify_url'];
         }
         
         Core::request($verify_url, $notify_parameters);

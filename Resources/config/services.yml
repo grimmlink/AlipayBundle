@@ -5,8 +5,8 @@ parameters:
 services:
     grimmlink_alipay.request_handler:
         class:     '%grimmlink_alipay.request_handler.class%'
-        arguments: ['@form.factory', '%grimmlink_alipay.parameters%']
+        arguments: ['@form.factory', '%grimmlink_alipay.parameters%', '%grimmlink_alipay.config%']
 
     grimmlink_alipay.response_handler:
         class:     '%grimmlink_alipay.response_handler.class%'
-        arguments: ['@request_stack', '@event_dispatcher', '%grimmlink_alipay.parameters%']
+        arguments: ['@request_stack', '@event_dispatcher', '%grimmlink_alipay.parameters%', '%grimmlink_alipay.config%']

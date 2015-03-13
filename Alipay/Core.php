@@ -26,7 +26,7 @@ class Core
     {
         $filtered_parameters = array();
         foreach ($parameters as $key => $val) {
-            if (in_array($key, array('sign', 'sign_type', 'key', 'transport')) || $val == "") {
+            if (in_array($key, array('sign', 'sign_type')) || $val == "") {
                 continue;
             } else {
                 $filtered_parameters[$key] = $val;
