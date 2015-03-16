@@ -1,6 +1,6 @@
 <?php
 
-namespace Grimmlink\AlipayBundle\Alipay
+namespace Grimmlink\AlipayBundle\Alipay;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -118,7 +118,7 @@ class Response
      */
     private function buildSign($parameters, $key)
     {
-        $query_string = self::toQueryString($parameters);
+        $query_string = Core::toQueryString($parameters);
         $sign = md5($query_string . $key);
         
         return $sign;
