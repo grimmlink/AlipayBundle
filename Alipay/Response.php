@@ -1,10 +1,11 @@
 <?php
 
-namespace Grimmlink\AlipayBundle\Alipay
+namespace Grimmlink\AlipayBundle\Alipay;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 
 use Grimmlink\AlipayBundle\Event\AlipayEvents;
 use Grimmlink\AlipayBundle\Event\AlipayResponseEvent;
@@ -30,6 +31,11 @@ class Response
     private $dispatcher;
 
     /**
+     * @var FileLocator
+     */
+    private $file_locator;
+
+    /**
      * @var string
      */
     private $signature;
@@ -52,10 +58,11 @@ class Response
      * @param array                    $parameters
      * @param array                    $config
      */
-    public function __construct(RequestStack $request_stack, EventDispatcherInterface $dispatcher, array $parameters, array $config)
+    public function __construct(RequestStack $request_stack, EventDispatcherInterface $dispatcher, FileLocator $file_locator, array $parameters, array $config)
     {
         $this->request = $request_stack->getCurrentRequest();
         $this->dispatcher = $dispatcher;
+        $this->file_locator = $file_locator;
         $this->parameters = $parameters;
         $this->config = $config;
     }
@@ -118,7 +125,7 @@ class Response
      */
     private function buildSign($parameters, $key)
     {
-        $query_string = self::toQueryString($parameters);
+        $query_string = Core::toQueryString($parameters);
         $sign = md5($query_string . $key);
         
         return $sign;
@@ -126,17 +133,13 @@ class Response
 
     private function getNotifyResponse($notify_id) {
         $notify_parameters = array(
+            'service'       => 'notify_verify',
             'partner'       => $this->parameters['partner'],
-            'notify_id'    => $notify_id
+            'notify_id'    => $notify_id,
         );
         
-        if ($this->config['transport'] == 'https') {
-            $verify_url = $this->config['https_verify_url'];
-            $notify_parameters['service'] = 'notify_verify';
-        } else {
-            $verify_url = $this->config['http_verify_url'];
-        }
+        $cacert = $this->file_locator->locate('@GrimmlinkAlipayBundle/Resources/alipay_cacert.pem');
         
-        Core::request($verify_url, $notify_parameters);
+        Core::request($this->config['https_verify_url'], $notify_parameters, $cacert);
     }
 }

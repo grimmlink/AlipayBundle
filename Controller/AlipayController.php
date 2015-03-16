@@ -21,7 +21,7 @@ class AlipayController extends Controller
      */
     public function notifyAction()
     {
-        $response = $this->container->get('grimm_alipay.response_handler');
+        $response = $this->container->get('grimmlink_alipay.response_handler');
         $verification = $response->verify();
 
         return new Response($verification ? 'success' : 'fail');

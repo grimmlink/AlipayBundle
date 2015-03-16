@@ -9,4 +9,4 @@ services:
 
     grimmlink_alipay.response_handler:
         class:     '%grimmlink_alipay.response_handler.class%'
-        arguments: ['@request_stack', '@event_dispatcher', '%grimmlink_alipay.parameters%', '%grimmlink_alipay.config%']
+        arguments: ['@request_stack', '@event_dispatcher', '@file_locator', '%grimmlink_alipay.parameters%', '%grimmlink_alipay.config%']
