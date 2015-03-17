@@ -2,7 +2,7 @@
     "name": "grimmlink/alipay-bundle",
     "type": "symfony-bundle",
     "description": "GrimmlinkAlipayBundle",
-    "homepage": "https://bitbucket.org/grimmlink/grimmalipaybundle",
+    "homepage": "https://github.com/grimmlink/AlipayBundle",
     "license": "MIT",
     "authors": [
         { "name": "Guillaume Fremont", "email": "grimmlink@gmail.com" }
@@ -14,8 +14,7 @@
         "lib-openssl": ">=0.9.6",
         "symfony/framework-bundle": "~2.3",
         "symfony/form": "~2.3",
-        "symfony/options-resolver": "~2.3",
-        "kriswallsmith/buzz": "~0.13"
+        "symfony/options-resolver": "~2.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0"
