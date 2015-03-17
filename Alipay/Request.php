@@ -2,7 +2,6 @@
 
 namespace Grimmlink\AlipayBundle\Alipay;
 
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 

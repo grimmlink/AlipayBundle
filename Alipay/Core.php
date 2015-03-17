@@ -2,10 +2,6 @@
 
 namespace Grimmlink\AlipayBundle\Alipay;
 
-use Buzz\Browser;
-use Buzz\Client\Curl;
-use Buzz\Message\Response;
-
 /**
  * Class Core
  *
@@ -113,32 +109,9 @@ class Core
         curl_setopt($curl, CURLOPT_CAINFO,          $cacert);
         $response = curl_exec($curl);
         
-        $content  = 'URL : ' . $url . "\n";
-        $content .= 'CRT : ' . $cacert . "\n";
-        $content .= 'RES : ' . $response . "\n";
-        $content .= 'ERR : ' . curl_error($curl) . "\n\n";
-        file_put_contents('/var/www/bridge/alipay_calls', $content, FILE_APPEND);
-        
         $return = curl_error($curl) ? false : $response;
 		curl_close($curl);
         
 		return $return;
-        
-        
-        // $curl = new Curl();
-        // $curl->setOption(CURLOPT_HEADER,          0);
-        // $curl->setOption(CURLOPT_RETURNTRANSFER,  1);
-        // $curl->setOption(CURLOPT_SSL_VERIFYPEER,  true);
-        // $curl->setOption(CURLOPT_SSL_VERIFYHOST,  2);
-        // $curl->setOption(CURLOPT_CAINFO,          $cacert);
-        
-        // $browser = new Browser($curl);
-        // $response = $browser->call($url, 'get');
-        
-        // if ($response->isSuccessful()) {
-            // return $response->getContent();
-        // } else {
-            // return false;
-        // }
     }
 }

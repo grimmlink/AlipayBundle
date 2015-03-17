@@ -3,7 +3,6 @@
 namespace Grimmlink\AlipayBundle\Alipay;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
@@ -34,11 +33,6 @@ class Response
      * @var FileLocator
      */
     private $file_locator;
-
-    /**
-     * @var string
-     */
-    private $signature;
 
     /**
      * @var array
