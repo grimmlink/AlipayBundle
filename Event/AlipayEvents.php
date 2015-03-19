@@ -10,7 +10,7 @@ namespace Grimmlink\AlipayBundle\Event;
 class AlipayEvents
 {
     /**
-     * Trigered for each alipay response
+     * Trigered for each alipay response.
      *
      * @var string
      */

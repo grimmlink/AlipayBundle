@@ -5,12 +5,9 @@ namespace Grimmlink\AlipayBundle\Alipay;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 
-use Grimmlink\AlipayBundle\Alipay\Core;
-
 /**
- * Class Request
+ * Class Request.
  *
- * @package Grimmlink\AlipayBundle\Alipay
  *
  * @author Guillaume Fremont <grimmlink@gmail.com>
  */
@@ -20,19 +17,19 @@ class Request
      * @var FormFactoryInterface
      */
     protected $factory;
-    
+
     /**
      * @var array
      */
     protected $parameters;
-    
+
     /**
      * @var array
      */
     protected $config;
-    
+
     /**
-     * Construct method
+     * Construct method.
      *
      * @param FormFactoryInterface $factory
      * @param array                $parameters
@@ -47,7 +44,7 @@ class Request
     }
 
     /**
-     * Sets the config parameters
+     * Sets the config parameters.
      *
      * @param array $parameters
      */
@@ -59,7 +56,7 @@ class Request
             'partner'           => $parameters['partner'],
             'currency'          => $parameters['currency'],
             'sign_type'         => 'MD5',
-            
+
             // 'notify_url'        => $notify_url,
             // 'return_url'        => $return_url,
             // 'subject'           => $subject,
@@ -80,7 +77,7 @@ class Request
     {
         return (isset($this->parameters[$name])) ? $this->parameters[$name] : null;
     }
-    
+
     /**
      * Sets a parameter.
      *
@@ -97,7 +94,7 @@ class Request
     }
 
     /**
-     * Returns all parameters
+     * Returns all parameters.
      *
      * @return array
      */
@@ -105,7 +102,7 @@ class Request
     {
         return $this->parameters;
     }
-    
+
     /**
      * Sets multiple parameters.
      *
@@ -121,11 +118,11 @@ class Request
 
         return $this;
     }
-    
+
     /**
      * Returns a form with defined parameters.
      *
-     * @param  array $options
+     * @param array $options
      *
      * @return Form
      */
@@ -142,7 +139,7 @@ class Request
 
         return $builder->getForm();
     }
-    
+
     /**
      * Returns all parameters set for a payment.
      *
@@ -153,15 +150,15 @@ class Request
     public function buildParameters($parameters)
     {
         $sorted_params = Core::sortParameters($parameters);
-        
+
         $sorted_params['sign'] = $this->buildSign($sorted_params, $this->config['key']);
         $sorted_params['sign_type'] = $this->parameters['sign_type'];
-        
+
         return $sorted_params;
     }
 
     /**
-     * Build sign string
+     * Build sign string.
      *
      * @param array  $parameters
      * @param string $key
@@ -171,8 +168,8 @@ class Request
     public function buildSign($parameters, $key)
     {
         $query_string = Core::toQueryString($parameters);
-        $sign = md5($query_string . $key);
-        
+        $sign = md5($query_string.$key);
+
         return $sign;
     }
 

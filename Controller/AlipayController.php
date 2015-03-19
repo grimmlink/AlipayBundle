@@ -6,16 +6,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AlipayController
+ * Class AlipayController.
  *
- * @package Grimmlink\AlipayBundle\Controller
  *
  * @author Guillaume Fremont <grimmlink@gmail.com>
  */
 class AlipayController extends Controller
 {
     /**
-     * Receive the notification from Alipay
+     * Receive the notification from Alipay.
      *
      * @return Response
      */

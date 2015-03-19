@@ -3,22 +3,21 @@
 namespace Grimmlink\AlipayBundle\Alipay;
 
 /**
- * Class Core
+ * Class Core.
  *
- * @package Grimmlink\AlipayBundle\Alipay
  *
  * @author Guillaume Fremont <grimmlink@gmail.com>
  */
 class Core
 {
     /**
-     * Returns filtered parameters
+     * Returns filtered parameters.
      *
      * @param array $parameters
      *
      * @return array
      */
-    static public function filterParameters($parameters)
+    public static function filterParameters($parameters)
     {
         $filtered_parameters = array();
         foreach ($parameters as $key => $val) {
@@ -28,77 +27,77 @@ class Core
                 $filtered_parameters[$key] = $val;
             }
         }
-        
+
         return $filtered_parameters;
     }
-    
+
     /**
-     * Returns sorted parameters
+     * Returns sorted parameters.
      *
      * @param array $parameters
      *
      * @return array
      */
-    static public function sortParameters($parameters)
+    public static function sortParameters($parameters)
     {
         $parameters = self::filterParameters($parameters);
         ksort($parameters);
         reset($parameters);
-        
+
         return $parameters;
     }
-    
+
     /**
-     * Transform an array into a querystring
+     * Transform an array into a querystring.
      *
      * @param array $parameters
      *
      * @return string
      */
-    static public function toQueryString(array $parameters)
+    public static function toQueryString(array $parameters)
     {
         $query_array = array();
-        
+
         foreach ($parameters as $key => $val) {
             $query_array[] = sprintf('%s=%s', $key, $val);
         }
-        
+
         $query_string = implode('&', $query_array);
-        
+
         return $query_string;
     }
-    
+
     /**
-     * Transform an array into an encoded querystring
+     * Transform an array into an encoded querystring.
      *
      * @param array $parameters
      *
      * @return string
      */
-    static public function toEncodedQueryString(array $parameters)
+    public static function toEncodedQueryString(array $parameters)
     {
         $query_array = array();
-        
+
         foreach ($parameters as $key => $val) {
             $query_array[] = sprintf('%s=%s', $key, urlencode($val));
         }
-        
+
         $query_string = implode('&', $query_array);
-        
+
         return $query_string;
     }
-    
+
     /**
-     * Transform an array into an encoded querystring
+     * Transform an array into an encoded querystring.
      *
      * @param array $parameters
      *
      * @return string
      */
-    static public function request($endpoint, $parameters, $cacert)
+    public static function request($endpoint, $parameters, $cacert)
     {
-        $url = $endpoint . '?' . self::toQueryString($parameters);
-        
+        $url = $endpoint.'?'.self::toQueryString($parameters);
+
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_POST,            false);
         curl_setopt($curl, CURLOPT_HEADER,          0);
@@ -108,10 +107,10 @@ class Core
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST,  2);
         curl_setopt($curl, CURLOPT_CAINFO,          $cacert);
         $response = curl_exec($curl);
-        
+
         $return = curl_error($curl) ? false : $response;
-		curl_close($curl);
-        
-		return $return;
+        curl_close($curl);
+
+        return $return;
     }
 }

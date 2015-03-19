@@ -6,9 +6,8 @@ use Grimmlink\AlipayBundle\Alipay\Request;
 use Grimmlink\AlipayBundle\Alipay\Core;
 
 /**
- * Class RequestTest
+ * Class RequestTest.
  *
- * @package Grimmlink\AlipayBundle\Tests\Alipay
  *
  * @author Guillaume Fremont <grimmlink@gmail.com>
  */
@@ -34,7 +33,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'transport'         => 'http',
             'key'               => '760bdzec6y9goq7ctyx96ezkz78287de',
         ));
-        
+
         $this->_alipay->setParameter('notify_url',    'http://www.domain.com/notify');
         $this->_alipay->setParameter('return_url',    'http://www.domain.com/return');
         $this->_alipay->setParameter('out_trade_no',  '12345678901234567890123456789012');
@@ -54,7 +53,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('UTF-8', $this->_alipay->getParameter('_input_charset'));
         $this->assertEquals('USD', $this->_alipay->getParameter('currency'));
         $this->assertEquals('create_forex_trade', $this->_alipay->getParameter('service'));
-        
+
         $this->assertEquals('http://www.domain.com/notify', $this->_alipay->getParameter('notify_url'));
         $this->assertEquals('http://www.domain.com/return', $this->_alipay->getParameter('return_url'));
         $this->assertEquals('12345678901234567890123456789012', $this->_alipay->getParameter('out_trade_no'));
@@ -92,16 +91,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testBuildSign()
     {
         $params = $this->_alipay->buildParameters($this->_alipay->getParameters());
-        
+
         $parameters = $this->_alipay->getParameters();
         unset($parameters['sign']);
         unset($parameters['sign_type']);
         ksort($parameters);
         reset($parameters);
-        
+
         $qs = Core::toQueryString($parameters);
-        $sign = md5($qs . '760bdzec6y9goq7ctyx96ezkz78287de');
-        
+        $sign = md5($qs.'760bdzec6y9goq7ctyx96ezkz78287de');
+
         $this->assertTrue($sign === $params['sign']);
     }
 }
