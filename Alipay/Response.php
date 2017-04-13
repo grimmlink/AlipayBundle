@@ -132,6 +132,6 @@ class Response
 
         $cacert = $this->file_locator->locate('@GrimmlinkAlipayBundle/Resources/alipay_cacert.pem');
 
-        Core::request($this->config['https_verify_url'], $notify_parameters, $cacert);
+        return Core::request($this->config['https_verify_url'], $notify_parameters, $cacert);
     }
 }

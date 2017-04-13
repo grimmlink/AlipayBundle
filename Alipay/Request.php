@@ -2,8 +2,10 @@
 
 namespace Grimmlink\AlipayBundle\Alipay;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\Form,
+    Symfony\Component\Form\FormFactoryInterface,
+    Symfony\Component\Form\Extension\Core\Type\FormType,
+    Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class Request.
@@ -131,10 +133,10 @@ class Request
         $options['csrf_protection'] = false;
 
         $parameters = $this->buildParameters($this->parameters);
-        $builder = $this->factory->createNamedBuilder('', 'form', $parameters, $options);
+        $builder = $this->factory->createNamedBuilder('', FormType::class, $parameters, $options);
 
         foreach ($parameters as $key => $value) {
-            $builder->add($key, 'hidden');
+            $builder->add($key, HiddenType::class);
         }
 
         return $builder->getForm();

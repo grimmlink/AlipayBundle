@@ -1,5 +1,5 @@
 grimmlink_alipay_notify:
-    pattern:  /alipay_notify
+    path:  /alipay_notify
     defaults: { _controller: GrimmlinkAlipayBundle:Alipay:notify }
     requirements:
         _method: POST
