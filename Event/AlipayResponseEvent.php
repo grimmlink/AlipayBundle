@@ -24,19 +24,19 @@ class AlipayResponseEvent extends Event
     /**
      * @var boolean
      */
-    private $signed;
+    private $verified;
 
     /**
      * Constructor.
      *
      * @param array   $data
-     * @param boolean $signed
+     * @param boolean $verified
      */
-    public function __construct(array $data, $response, $signed = false)
+    public function __construct(array $data, $response, $verified = false)
     {
         $this->data = $data;
         $this->response = $response;
-        $this->signed = (bool) $signed;
+        $this->verified = (bool) $verified;
     }
 
     /**
@@ -64,8 +64,8 @@ class AlipayResponseEvent extends Event
      *
      * @return boolean
      */
-    public function isSigned()
+    public function isVerified()
     {
-        return $this->signed;
+        return $this->verified;
     }
 }

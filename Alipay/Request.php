@@ -56,8 +56,10 @@ class Request
             '_input_charset'    => $parameters['input_charset'],
             'service'           => $parameters['service'],
             'partner'           => $parameters['partner'],
+            'seller_id'         => $parameters['partner'],
             'currency'          => $parameters['currency'],
-            'sign_type'         => 'MD5',
+            'sign_type'         => $parameters['sign_type'],
+            'payment_type'      => 1,
 
             // 'notify_url'        => $notify_url,
             // 'return_url'        => $return_url,
@@ -170,7 +172,14 @@ class Request
     public function buildSign($parameters, $key)
     {
         $query_string = Core::toQueryString($parameters);
-        $sign = md5($query_string.$key);
+
+		switch (strtoupper(trim($this->parameters['sign_type']))) {
+			case "RSA":
+				$sign = Core::rsaSign($query_string, $key);
+				break;
+			default:
+				$sign = md5($query_string.$key);
+		}
 
         return $sign;
     }

@@ -72,17 +72,17 @@ class Response
     public function verify()
     {
         $query_parameters = $this->request->request->all();
-        $isSigned = $this->verifySign($query_parameters);
+        $isVerified = $this->verifySign($query_parameters);
 
         $response = 'true';
         if ($this->request->request->has('notify_id')) {
             $response = $this->getNotifyResponse($this->request->request->get('notify_id'));
         }
 
-        $event = new AlipayResponseEvent($query_parameters, $response, $isSigned);
+        $event = new AlipayResponseEvent($query_parameters, $response, $isVerified);
         $this->dispatcher->dispatch(AlipayEvents::ALIPAY_NOTIFY_RESPONSE, $event);
 
-        if (preg_match("/true$/i", $response) && $isSigned) {
+        if (preg_match("/true$/i", $response) && $isVerified) {
             return true;
         } else {
             return false;
@@ -99,27 +99,17 @@ class Response
     private function verifySign($query_parameters)
     {
         $sorted_params = Core::sortParameters($query_parameters);
+        $query_string = Core::toQueryString($sorted_params);
 
-        $sign = $this->buildSign($sorted_params, $this->config['key']);
-        $isSigned = ($sign == $query_parameters['sign']);
+		switch (strtoupper(trim($this->parameters['sign_type']))) {
+			case "RSA":
+				$verified = Core::rsaVerify($query_string, $this->config['alipay_public_key'], $query_parameters['sign']);
+				break;
+			default:
+				$verified = md5($query_string.$this->config['key']) == $parameters['sign'];
+		}
 
-        return $isSigned;
-    }
-
-    /**
-     * Build sign string.
-     *
-     * @param array  $parameters
-     * @param string $key
-     *
-     * @return string
-     */
-    private function buildSign($parameters, $key)
-    {
-        $query_string = Core::toQueryString($parameters);
-        $sign = md5($query_string.$key);
-
-        return $sign;
+        return $verified;
     }
 
     private function getNotifyResponse($notify_id)
@@ -127,7 +117,7 @@ class Response
         $notify_parameters = array(
             'service'       => 'notify_verify',
             'partner'       => $this->parameters['partner'],
-            'notify_id'    => $notify_id,
+            'notify_id'     => $notify_id,
         );
 
         $cacert = $this->file_locator->locate('@GrimmlinkAlipayBundle/Resources/alipay_cacert.pem');
